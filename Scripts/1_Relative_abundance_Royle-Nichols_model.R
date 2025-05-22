@@ -4,22 +4,25 @@
   #'  R code from Bassing, S.B., D.E. Ausband, M.A. Mumma, J. Baumgardt, S. Thompson, 
   #'  M.A. Hurley, and M. Falcy. 2025. "Disentangling the web of species interactions 
   #'  in a multi-predator, multi-prey community"
-  #'  
   #'  --------------------------------------
   #'  Script loads detection histories for each species, site, and summer, then 
   #'  bundles data and runs Royle-Nichols abundance models in JAGS to estimate 
-  #'  relative abundance index (RAI) at each camera site. 
+  #'  relative abundance index (RAI) at each camera site. Script sources
+  #'  1a_RNmodel_JAGS_code_2020.R and 1b_RNmodel_JAGS_code_2021_2022.R to fit
+  #'  models with JAGS. Using 2 different scripts because surveyed different 
+  #'  number of study areas in 2020 vs 2021/2022, leading to different number of
+  #'  parameters included in the models.
   #'  
   #'  Anonymized data formatted as detection histories are described below. 
   #'  Qualified researchers can contact Matt Boone (idfgdatarequests@idfg.idaho.gov), 
-  #'  Data Management Lead, Idaho Department of Fish and Game, Idaho Fish and Wildlife Information System, 
-  #'  600 S Walnut, Boise, ID 83712 for full data requests. 
+  #'  Data Management Lead, Idaho Department of Fish and Game, Idaho Fish and Wildlife 
+  #'  Information System, 600 S Walnut, Boise, ID 83712 for full data requests. 
   #'  
   #'  3 study areas (GMU 1, 6, and 10A) were surveyed June 1 - Sept 15, 2020, 2021, and 2022.
   #'  In summer 2020, only GMU 6 & 10A were surveyed, with a total of 476 camera sites in operation. 
   #'  In summer 2021, all study areas were surveyed, with a total of 694 camera sites in operation. 
   #'  In summer 2022, all study areas were surveyed, with a total of 700 camera sites in operation. 
-  #'  Script requires 2 data sets:
+  #'  Script loads 2 data sets comprising 6 files:
   #'    1. DH_smr2020.RData, DH_smr2021.RData, DH_smr2022.RData: 
   #'        Each contains a list of 7 data frames. Each data frame contains 1 detection 
   #'        history per species
@@ -546,11 +549,11 @@
   #'  List spatial RN local abundance data and save
   spatial_RN_list <- list(spatial_rn_bear, spatial_rn_coy, spatial_rn_lion, spatial_rn_wolf,
                           spatial_rn_elk, spatial_rn_moose, spatial_rn_wtd)
-  save(spatial_RN_list, file = "./Data/Spatial_data/spatial_RN_list.RData")
+  save(spatial_RN_list, file = "./Outputs/Spatial_outputs/spatial_RN_list.RData")
   
   #'  Merge wolf results into single large spatial data frame and save as a shapefile
   spatial_rn_wolf_locs <- bind_rows(spatial_rn_wolf[[1]], spatial_rn_wolf[[2]], spatial_rn_wolf[[3]])
-  st_write(spatial_rn_wolf_locs, "./Data/Spatial_data/spatial_rn_wolf_locs.shp")
+  st_write(spatial_rn_wolf_locs, "./Outputs/Spatial_outputs/spatial_rn_wolf_locs.shp")
   
   year_list <- list("2020", "2021", "2022")
   
@@ -623,6 +626,6 @@
          units = "in", width = 13, height = 11, dpi = 400, device = "tiff", compression = "lzw")
   
   
-  #'  Next step in the analysis:
-  #'  2. Camera clustering and relative density index estimation with 2_Camera_clusters_and_RDIs.R
+  #'  Next step:
+  #'  Cluster cameras based on wolf relative abundance index (script 2_Cluster_cameras.R)
   
