@@ -5,9 +5,23 @@
   #'  M.A. Hurley, and M. Falcy. 2025. "Disentangling the web of species interactions 
   #'  in a multi-predator, multi-prey community"
   #'  -------------------------------
-  #'  Group cameras into clusters based on clustering algorithms 
+  #'  Script to cluster cameras into biologically relevant groupings. Study areas 
+  #'  (GMUs) are bisected by large water bodies that are assumed to act as semi-
+  #'  permeable boundaries to animal movement so study study areas are first 
+  #'  clipped by water shapefiles. Cameras are then cluster based on combination 
+  #'  of geographic distance between cameras and similarities in a 3-year snapshot 
+  #'  of wolf relative abundance using the Ward-like hierarchical clustering algorithm. 
+  #'  Polygons are generated around each cluster and camera clusters and polygons 
+  #'  are saved as sf objects. Wolf relative density is calculated for each cluster 
+  #'  and year. 
   #'  
-  #'  Camera operations table generated in Detection_data_cleaning.R
+  #'  Requires:
+  #'    1. Camera location data (note: camera coordinates have been adjusted to
+  #'    maintain anonymity) saved in Data/Spatial_data folder
+  #'    2. Study area (GMU) and large rivers/waterbody spatial data saved in 
+  #'    Data/Spatial_data folder
+  #'    3. Wolf relative abundance index data estimated and saved as a spatial   
+  #'    object with 1_Relative_abundance_Royle-Nichols_models.R script
   #'  -------------------------------
   
   #'  Clean workspace
@@ -21,7 +35,7 @@
   library(tidyverse)
   library(ClustGeo)
   library(units)
-  library(mapview)#; mapviewOptions(fgb = FALSE)
+  library(mapview)
   library(adehabitatHR)
   library(lwgeom)
   
