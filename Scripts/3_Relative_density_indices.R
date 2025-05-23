@@ -16,6 +16,18 @@
   #'    abundance model in 1_Relative_abundance_Royle-Nichols_model.R
   #'    2. Spatial data for GMUs and clusters generated in 2_Cluster_cameras.R 
   #'    3. Coveriate data housed in Data folder
+  #'       Covariate data includes:
+  #'        1. GMU: Game Management Unit where each camera cluster occurred
+  #'        2. ClusterID: Unique number of cluster within a GMU (ClusterID = 1 
+  #'        through n for clusters in each GMU)
+  #'        3. Year: Year of data collection
+  #'        4. DisturbedForest_last20Yrs: percent of cluster comprising forested 
+  #'        habitat that was disturbed within the 20 years prior to year of data 
+  #'        collection. Covariate generated using canopy loss data from the Global 
+  #'        Forest Cover Change dataset extracted from Google Earth Engine. 
+  #'        5. annual harvest: total number of wolves harvested (trapped, hunted, 
+  #'        or removed for management) reported within 1 year prior to start of 
+  #'        annual data collection. Data provided by Idaho Department of Fish & Game.
   #'  --------------------------------
   
   #'  Load libraries
@@ -217,9 +229,6 @@
     #'  Review to make sure it time lags look right given these observations are 
     #'  hypothesized to affect the next set of observations
     print(pivot_data_wide)
-    #'  Drop unneeded columns used to help double check time lags
-    pivot_data_wide <- pivot_data_wide %>%
-      dplyr::select(-c(AccumulatedLoss_thru, harvest_season))
     return(pivot_data_wide)
   }
   density_wide <- lapply(cluster_density, wide_data)
@@ -245,7 +254,7 @@
     hist(dat$moose, main = paste("Relative moose density across clusters, \nsummer", yr))
     hist(dat$whitetailed_deer, main = paste("Relative wtd density across clusters, \nsummer", yr))
     hist(dat$DisturbedForest_last20Yrs, main = paste("Percent disturbed forest, \nsummer", yr))
-    hist(dat$harvest_sqKm, main = paste("Wolves harvested/km2 over past 12 months, \nstarting June", yr))
+    hist(dat$annual_harvest, main = paste("Wolves harvested over past 12 months, \nstarting June", yr))
   }
   plot_histogram(density_wide[[1]], yr = "2020")
   plot_histogram(density_wide[[2]], yr = "2021")
@@ -262,14 +271,14 @@
     #'  Indicate whether observation was from first or second year in grouped data
     mutate(GroupYear = ifelse(year == "yr1", "first", "second")) %>%
     #'  Add time period identifier to each column name
-    rename_with(.cols = bear_black:harvest_sqKm, function(x){paste0(x, ".Tminus1")}) %>%
+    rename_with(.cols = bear_black:annual_harvest, function(x){paste0(x, ".Tminus1")}) %>%
     dplyr::select(-year)
   #'  Stack year 2 & year 3 data
   dat_t <- dat_stack_list[[2]] %>% 
     #'  Indicate whether observation was from first or second year in grouped data
     mutate(GroupYear = ifelse(year == "yr2", "first", "second")) %>%
     #'  Add time period identifier to each column name
-    rename_with(.cols = bear_black:harvest_sqKm, function(x){paste0(x, ".T")}) %>%
+    rename_with(.cols = bear_black:annual_harvest, function(x){paste0(x, ".T")}) %>%
     dplyr::select(-year)
   
   #'  Join t-1 and t data based on camera location
@@ -278,11 +287,10 @@
     #'  Drop sites with NAs (missing 1+ years of data)
     na.omit(.) %>%
     mutate(ClusterID = as.character(ClusterID),
-           harvest_sqKm_quad.Tminus1 = harvest_sqKm.Tminus1^2,
            Year.x = as.character(Year.x),
            Year.y = as.character(Year.y)) 
   
-  #'  Z-transform local abundance estimates 
+  #'  Z-transform local abundance estimates (not actually needed - piecewiseSEM takes care of this)
   localN_z_1YrLag <- density_wide_1YrLag_20s_22s %>%
     mutate(across(where(is.numeric), ~(.x - mean(.x, na.rm = TRUE))/sd(.x, na.rm = TRUE)))
     
@@ -312,7 +320,6 @@
   summary(lm(mountain_lion.T ~ wolf.Tminus1 + bear_black.Tminus1, data = localN_z_1YrLag))
   summary(lm(coyote.T ~ wolf.Tminus1 + mountain_lion.Tminus1, data = localN_z_1YrLag))
   summary(lm(wolf.T ~ wolf.Tminus1 + annual_harvest.Tminus1, data = localN_z_1YrLag))
-  summary(lm(wolf.T ~ wolf.Tminus1 + harvest_sqKm.Tminus1, data = localN_z_1YrLag))
   
   plot(whitetailed_deer.T ~ mountain_lion.Tminus1, data = localN_z_1YrLag)
   plot(elk.T ~ mountain_lion.Tminus1, data = localN_z_1YrLag)
@@ -321,7 +328,7 @@
   plot(coyote.T ~ wolf.Tminus1, data = localN_z_1YrLag)
   
   #'  Save outputs
-  save(localN_z_1YrLag, file = "./Outputs/data_for_SEM_1YrLag_n.RData")
+  save(density_wide_1YrLag_20s_22s, file = "./Outputs/data_for_SEM_1YrLag_n.RData")
   
   #'  Reminder to ignore warnings if sourcing this script with 4_Structural_Equation_Models.R
   print("IGNORE WARNINGS!")
