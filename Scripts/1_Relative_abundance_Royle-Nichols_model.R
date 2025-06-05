@@ -25,7 +25,8 @@
   #'  Script loads 2 data sets comprising 6 files:
   #'    1. DH_smr2020.RData, DH_smr2021.RData, DH_smr2022.RData: 
   #'        Each contains a list of 7 data frames. Each data frame contains 1 detection 
-  #'        history per species
+  #'        history per species: [[1]] = black bear; [[2]] = coyote; [[3]] = mountain lion;
+  #'        [[4]] = wolf; [[5]] = elk; [[6]] = moose; [[7]] = white-tailed deer
   #'    2. stations_smr2020.RData, stations_smr2021.RData, stations_smr2022.RData: 
   #'        Each is a data frame where rows represent a unique camera station and 
   #'        columns indicate each station's unique ID, season of deployment, study  
