@@ -147,8 +147,8 @@
   head(cluster_density[[1]]); head(cluster_density[[2]]); head(cluster_density[[3]])
   rdi <- bind_rows(cluster_density[[1]], cluster_density[[2]], cluster_density[[3]]) %>%
     as.data.frame(.) %>%
-    dplyr::select(c(GMU, Year, ClusterID, area_km2, Species, SppDensity.100km2.r)) %>%
-    filter(!is.na(ClusterID))
+    dplyr::select(c(GMU, Year, Clusters, area_km2, Species, SppDensity.100km2.r)) %>%
+    filter(!is.na(Clusters))
   
   #'  Quick visualization of spread of RDI per species across years & GMUs
   ggplot(rdi, aes(Species, SppDensity.100km2.r, fill=factor(Species))) +
@@ -168,7 +168,7 @@
            GMU = factor(GMU, levels = c("GMU1", "GMU6", "GMU10A"))) %>%
     pivot_wider(names_from = Species, values_from = SppDensity.100km2.r) %>%
     rename("Area (km2)" = "area_km2") %>%
-    rename("Cluster" = "ClusterID") %>%
+    rename("Cluster" = "Clusters") %>%
     arrange(GMU, Year)
   
   write_csv(rdi_all, "./Outputs/Cluster_Relative_Density_all_Spp.csv")
