@@ -30,8 +30,11 @@
   #'    2. stations_smr2020.RData, stations_smr2021.RData, stations_smr2022.RData: 
   #'        Each is a data frame where rows represent a unique camera station and 
   #'        columns indicate each station's unique ID, season of deployment, study  
-  #'        area (GMU) of deployment, and the camera setup type. 
-  #'            GMU has 3 factor levels: 1 = GMU 10A, 2 = GMU 6, 3 = GMU 1 
+  #'        area (GMU) of deployment, and the camera setup type. Also contains 
+  #'        the cluster each camera is assigned to in a later stage and the area 
+  #'        of the cluster. These data are provided for a later stage of the analysis
+  #'        (3_Relative_density_indices.R) and can be ignored here.
+  #'            GMU has 3 factor levels: 1 = GMU10A, 2 = GMU6, 3 = GMU1 
   #'            Setup has 2 factor levels: 1 = random placement, 2 = trail/road placement
   #'  --------------------------------------
   
@@ -493,6 +496,10 @@
   #'  -----------------------------------------
   #####  Visualize relative abundance indices  #####
   #'  -----------------------------------------
+  #'  THE FOLLOWING CODE IS PROVIDED FOR TRANSPARENCY BUT CANNOT BE RUN WITH 
+  #'  PUBLICLY AVAILABLE DATA. CAMERA LOCATIONS ARE SENSITIVE BUT AVAILABLE
+  #'  UPON REQUEST FROM IDAHO DEPARTMENT OF FISH & GAME FOR QUALIFIED RESEARCHERS.
+  
   #'  Map relative abundance data per species, study area, and year
   library(sf)
   library(ggplot2)
@@ -504,9 +511,9 @@
     st_transform("+proj=longlat +datum=WGS84 +no_defs")
   
   #'  Camera site coordinates have been adjusted slightly to maintain location anonymity  
-  cams_2020_wgs84 <- st_read("./Data/Spatial_data/cams_2020_wgs84_offset.shp")
-  cams_2021_wgs84 <- st_read("./Data/Spatial_data/cams_2021_wgs84_offset.shp")
-  cams_2022_wgs84 <- st_read("./Data/Spatial_data/cams_2022_wgs84_offset.shp")
+  cams_2020_wgs84 <- st_read("./Data/Spatial_data/cams_2020_wgs84.shp")
+  cams_2021_wgs84 <- st_read("./Data/Spatial_data/cams_2021_wgs84.shp")
+  cams_2022_wgs84 <- st_read("./Data/Spatial_data/cams_2022_wgs84.shp")
   
   #'  Original water data: National Hydrology Database Idaho State
   bigwater <- st_read("./Data/Spatial_data/Idaho_waterbodies_1km2.shp")
