@@ -15,13 +15,18 @@
   #'  are saved as sf objects. Wolf relative density is calculated for each cluster 
   #'  and year. 
   #'  
+  #'  THIS SCRIPT IS PROVIDED FOR TRANSPARENCY BUT CANNOT BE RUN WITH PUBLICLY 
+  #'  AVAILABLE DATA. CAMERA LOCATIONS ARE SENSITIVE BUT AVAILABLE UPON REQUEST 
+  #'  FROM IDAHO DEPARTMENT OF FISH & GAME FOR QUALIFIED RESEARCHERS.
+  #'  
   #'  Requires:
-  #'    1. Camera location data (note: camera coordinates have been adjusted to
-  #'    maintain anonymity) saved in Data/Spatial_data folder
-  #'    2. Study area (GMU) and large rivers/waterbody spatial data saved in 
+  #'    1. Camera location data 
+  #'    (REQUIRES CAMERA LOCATIONS FROM IDAHO DEPARTMENTOF FISH & GAME)
+  #'    2. Study area (GMU) and large rivers/water body spatial data saved in 
   #'    Data/Spatial_data folder
   #'    3. Wolf relative abundance index data estimated and saved as a spatial   
-  #'    object with 1_Relative_abundance_Royle-Nichols_models.R script
+  #'    object at end of 1_Relative_abundance_Royle-Nichols_models.R script 
+  #'    (REQUIRES CAMERA LOCATIONS FROM IDAHO DEPARTMENT OF FISH & GAME)
   #'  -------------------------------
   
   #'  Clean workspace
@@ -42,10 +47,10 @@
   #'  ------------------------
   ####  Read in spatial data  ####
   #'  ------------------------
-  #'  Camera site coordinates have been adjusted slightly to maintain location anonymity  
-  cams_2020_wgs84 <- st_read("./Data/Spatial_data/cams_2020_wgs84_offset.shp")
-  cams_2021_wgs84 <- st_read("./Data/Spatial_data/cams_2021_wgs84_offset.shp")
-  cams_2022_wgs84 <- st_read("./Data/Spatial_data/cams_2022_wgs84_offset.shp")
+  #'  Load camera location coordinates
+  cams_2020_wgs84 <- st_read("./Data/Spatial_data/cams_2020_wgs84.shp")
+  cams_2021_wgs84 <- st_read("./Data/Spatial_data/cams_2021_wgs84.shp")
+  cams_2022_wgs84 <- st_read("./Data/Spatial_data/cams_2022_wgs84.shp")
   #'  List camera spatial data
   cam_list <- list(cams_2020_wgs84, cams_2021_wgs84, cams_2022_wgs84)
   
@@ -568,24 +573,24 @@
 
   #'  Calculate area (km^2) for each cluster polygon
   gmu1E_poly_area <- st_area(UDs_gmu1E_poly) %>% set_units(., km^2) %>% drop_units(.) %>% as.data.frame()
-  names(gmu1E_poly_area) <- "area_km2"
+  names(gmu1E_poly_area) <- "Area_km2"
   UDs_gmu1E_poly <- bind_cols(UDs_gmu1E_poly, gmu1E_poly_area) 
-  mean(UDs_gmu1E_poly$area_km2)
+  mean(UDs_gmu1E_poly$Area_km2)
   
   gmu1NE_poly_area <- st_area(UDs_gmu1NE_poly) %>% set_units(., km^2) %>% drop_units(.) %>% as.data.frame()
-  names(gmu1NE_poly_area) <- "area_km2"
+  names(gmu1NE_poly_area) <- "Area_km2"
   UDs_gmu1NE_poly <- bind_cols(UDs_gmu1NE_poly, gmu1NE_poly_area) 
-  mean(UDs_gmu1NE_poly$area_km2)
+  mean(UDs_gmu1NE_poly$Area_km2)
   
   gmu1C_poly_area <- st_area(UDs_gmu1C_poly) %>% set_units(., km^2) %>% drop_units(.) %>% as.data.frame()
-  names(gmu1C_poly_area) <- "area_km2"
+  names(gmu1C_poly_area) <- "Area_km2"
   UDs_gmu1C_poly <- bind_cols(UDs_gmu1C_poly, gmu1C_poly_area) 
-  mean(UDs_gmu1C_poly$area_km2)
+  mean(UDs_gmu1C_poly$Area_km2)
   
   gmu1W_poly_area <- st_area(UDs_gmu1W_poly) %>% set_units(., km^2) %>% drop_units(.) %>% as.data.frame()
-  names(gmu1W_poly_area) <- "area_km2"
+  names(gmu1W_poly_area) <- "Area_km2"
   UDs_gmu1W_poly <- bind_cols(UDs_gmu1W_poly, gmu1W_poly_area) 
-  mean(UDs_gmu1W_poly$area_km2)
+  mean(UDs_gmu1W_poly$Area_km2)
   
   ######  GMU6 Cluster Polygons  ######
   #'  ---------------------------
@@ -626,9 +631,9 @@
   
   #'  Calculate area (km^2) for each cluster polygon
   gmu6_poly_area <- st_area(UDs_gmu6_poly) %>% set_units(., km^2) %>% drop_units(.) %>% as.data.frame()
-  names(gmu6_poly_area) <- "area_km2"
+  names(gmu6_poly_area) <- "Area_km2"
   UDs_gmu6_poly <- bind_cols(UDs_gmu6_poly, gmu6_poly_area)
-  mean(UDs_gmu6_poly$area_km2)
+  mean(UDs_gmu6_poly$Area_km2)
   
   ######  GMU10A Cluster Polygons  ######
   #'  -----------------------------
@@ -709,14 +714,14 @@
   
   #'  Calculate area (km^2) for each cluster polygon
   gmu10aN_poly_area <- st_area(UDs_gmu10aN_poly) %>% set_units(., km^2) %>% drop_units(.) %>% as.data.frame()
-  names(gmu10aN_poly_area) <- "area_km2"
+  names(gmu10aN_poly_area) <- "Area_km2"
   UDs_gmu10aN_poly <- bind_cols(UDs_gmu10aN_poly, gmu10aN_poly_area) 
-  mean(UDs_gmu10aN_poly$area_km2)
+  mean(UDs_gmu10aN_poly$Area_km2)
   
   gmu10aS_poly_area <- st_area(UDs_gmu10aS_poly) %>% set_units(., km^2) %>% drop_units(.) %>% as.data.frame()
-  names(gmu10aS_poly_area) <- "area_km2"
+  names(gmu10aS_poly_area) <- "Area_km2"
   UDs_gmu10aS_poly <- bind_cols(UDs_gmu10aS_poly, gmu10aS_poly_area) 
-  mean(UDs_gmu10aS_poly$area_km2)
+  mean(UDs_gmu10aS_poly$Area_km2)
   
   #'  ------------------------------------------------------
   ####  Relabel camera clusters based on adjusted polygons  ####
@@ -739,15 +744,15 @@
     rename("Clusters_original" = "Clusters") %>%
     rename("Clusters" = "Clusters.1") 
   #'  Grab polygon areas
-  c2_area <- unique(cam_clusters_gmu6$area_km2[cam_clusters_gmu6$Clusters == 2])
+  c2_area <- unique(cam_clusters_gmu6$Area_km2[cam_clusters_gmu6$Clusters == 2])
   #'  GMU6_U_125 gets left out during intersection 
   #'  (falls slightly outside of Cluster 2 polygon b/c clusters based on 95% KDE)
   GMU6_U_125 <- filter(clusters_gmu6, CamID == "GMU6_U_125") %>%
     rename("Clusters_original" = "Clusters") %>%
     mutate(Clusters = Clusters_original,
-           area_km2 = c2_area) %>%
+           Area_km2 = c2_area) %>%
     relocate(Clusters, .after = Clusters_adjacency) %>%
-    relocate(area_km2, .after = Clusters)
+    relocate(Area_km2, .after = Clusters)
   cam_clusters_gmu6 <- bind_rows(cam_clusters_gmu6, GMU6_U_125)
   mapview(list(gmu6_poly, cam_clusters_gmu6), zcol = "Clusters")
   
@@ -768,7 +773,7 @@
   wolf_density_gmu1 <- cam_clusters_gmu1 %>%
     group_by(Clusters) %>%
     reframe(nWolf = sum(RN_n_rn),
-            `Wolf density` = nWolf/area_km2) %>%
+            `Wolf density` = nWolf/Area_km2) %>%
     unique() %>%
     mutate(GMU = "GMU1") %>%
     full_join(gmu1_poly, by = "Clusters") %>%
@@ -776,7 +781,7 @@
   wolf_density_gmu6 <- cam_clusters_gmu6 %>%
     group_by(Clusters) %>%
     reframe(nWolf = sum(RN_n_rn),
-            `Wolf density` = nWolf/area_km2) %>%
+            `Wolf density` = nWolf/Area_km2) %>%
     unique() %>%
     mutate(GMU = "GMU6") %>%
     full_join(gmu6_poly, by = "Clusters") %>%
@@ -784,7 +789,7 @@
   wolf_density_gmu10a <- cam_clusters_gmu10a %>%
     group_by(Clusters) %>%
     reframe(nWolf = sum(RN_n_rn),
-            `Wolf density` = nWolf/area_km2) %>%
+            `Wolf density` = nWolf/Area_km2) %>%
     unique() %>%
     mutate(GMU = "GMU10A") %>%
     full_join(gmu10a_poly, by = "Clusters") %>%
@@ -792,9 +797,9 @@
   #'  Table with all wolf data
   wolf_density_tbl <- bind_rows(wolf_density_gmu1, wolf_density_gmu6, wolf_density_gmu10a) %>%
     as.data.frame(.) %>% 
-    mutate(area_km2 = round(area_km2, 2),
+    mutate(Area_km2 = round(Area_km2, 2),
            `Wolf density` = round(`Wolf density`, 3)) %>%
-    relocate(area_km2, .after = nWolf) %>%
+    relocate(Area_km2, .after = nWolf) %>%
     relocate(GMU, .before = Clusters) %>%
     dplyr::select(-geometry)
   #'  Save
@@ -818,13 +823,13 @@
   wolf_density_tbl <- read_csv("./Outputs/Cluster_wolf_RAI_density.csv")
   avg_cluster_area <- wolf_density_tbl %>%
     group_by(GMU) %>%
-    summarize(mean_areakm2 = mean(area_km2),
-              se_areakm2 = sd(area_km2)/sqrt(nrow(.))) %>%
+    summarize(mean_areakm2 = mean(Area_km2),
+              se_areakm2 = sd(Area_km2)/sqrt(nrow(.))) %>%
     ungroup()
   #'  Mean, min, and max cluster sizes
-  mean(wolf_density_tbl$area_km2)
-  min(wolf_density_tbl$area_km2); max(wolf_density_tbl$area_km2)
-  sd(wolf_density_tbl$area_km2)/sqrt(length(wolf_density_tbl$area_km2))
+  mean(wolf_density_tbl$Area_km2)
+  min(wolf_density_tbl$Area_km2); max(wolf_density_tbl$Area_km2)
+  sd(wolf_density_tbl$Area_km2)/sqrt(length(wolf_density_tbl$Area_km2))
   
   #'  Number of cameras per cluster
   cam_clusters <- bind_rows(cam_clusters_gmu1, cam_clusters_gmu6, cam_clusters_gmu10a) %>%
