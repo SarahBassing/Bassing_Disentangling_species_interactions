@@ -5,6 +5,7 @@ Anonymized data formatted as detection histories are described below. Some porti
 Qualified researchers can contact the Data Management Lead, Idaho Department of Fish and Game, Idaho Fish and Wildlife Information System, 600 S Walnut, Boise, ID 83712 for full data requests: idfgdatarequests@idfg.idaho.gov 
 
 Repository contains 8 scripts, anonymized data, and shapefiles needed for some spatial analyses.
+
 "Scripts" folder:
 1. 1_Relative_abundance_Royle-Nichols_models.R: script to estimate relative abundance indices (RAI)
 2. 1a_RNmodel_JAGS_code_2020.R: JAGS code for Royle-Nichols abundance model based on 2020 data
@@ -15,7 +16,8 @@ Repository contains 8 scripts, anonymized data, and shapefiles needed for some s
 7. 5_Result_Tables_and_Summaries.R: script to generate result tables for publication
 8. 6_Result_Figures.R: script to generate figures for publication (MOST CANNOT BE RUN WITH PUBLICALLY AVAILABLE DATA PROVIDED IN THIS REPOSITORY)
   
-"Data.zip" folder: Once unzipped, will contain
+"Data.zip" folder: 
+Once unzipped, will contain
   1. "./Data/Spatial_data/"
     1. ClarkForkRiver_flowline: spatial line data for Clark Fork River flowing through study area
     2. Game_Management_Units: spatial polygon data for Idaho Dept. Fih & Game GMUs
@@ -35,7 +37,8 @@ Repository contains 8 scripts, anonymized data, and shapefiles needed for some s
       Camera site information used for Royle-Nichols abundance models and to calculate
       Relative Density Indices for each cluster based on cameras assigned to each cluster
   
-"Outputs.zip" folder: Once unzipped, will contain
+"Outputs.zip" folder: 
+Once unzipped, will contain
   1. "./Outputs/JAGS_out/"
       Currently empty but is automatically populated with model outputs when Royle-Nichols 
       abundance models are run using 1_Relative_abundance_Royle-Nichols_models.R
