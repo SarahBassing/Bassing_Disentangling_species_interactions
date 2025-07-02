@@ -6,14 +6,14 @@ Qualified researchers can contact the Data Management Lead, Idaho Department of 
 
 Repository contains 8 scripts, anonymized data, and shapefiles needed for some spatial analyses.
 "Scripts" folder:
-  -- 1_Relative_abundance_Royle-Nichols_models.R: script to estimate relative abundance indices (RAI)
-  -- 1a_RNmodel_JAGS_code_2020.R: JAGS code for Royle-Nichols abundance model based on 2020 data
-  -- 1b_RNmodel_JAGS_code_2021_2022.R: JAGS code for Royle-Nichols abundance model based on 2021 & 2022 data (differ from 2020 code because requires slightly different model parameterization with addition of GMU1 study area)
-  -- 2_Cluster_cameras.R: script to group cameras based on wolf RAI and geographic distance (CANNOT BE RUN WITH PUBLICLY AVAILABLE DATA PROVIDED IN THIS REPOSITORY)
-  -- 3_Relative_density_indices.R: script to generate relative density indices using RAIs
-  -- 4_Structural_Equation_Models.R: script to test hypotheses using structural equation models (SEM)
-  -- 5_Result_Tables_and_Summaries.R: script to generate result tables for publication
-  -- 6_Result_Figures.R: script to generate figures for publication (MOST CANNOT BE RUN WITH PUBLICALLY AVAILABLE DATA PROVIDED IN THIS REPOSITORY)
+1. 1_Relative_abundance_Royle-Nichols_models.R: script to estimate relative abundance indices (RAI)
+2. 1a_RNmodel_JAGS_code_2020.R: JAGS code for Royle-Nichols abundance model based on 2020 data
+3. 1b_RNmodel_JAGS_code_2021_2022.R: JAGS code for Royle-Nichols abundance model based on 2021 & 2022 data (differ from 2020 code because requires slightly different model parameterization with addition of GMU1 study area)
+4. 2_Cluster_cameras.R: script to group cameras based on wolf RAI and geographic distance (CANNOT BE RUN WITH PUBLICLY AVAILABLE DATA PROVIDED IN THIS REPOSITORY)
+5. 3_Relative_density_indices.R: script to generate relative density indices using RAIs
+6. 4_Structural_Equation_Models.R: script to test hypotheses using structural equation models (SEM)
+7. 5_Result_Tables_and_Summaries.R: script to generate result tables for publication
+8. 6_Result_Figures.R: script to generate figures for publication (MOST CANNOT BE RUN WITH PUBLICALLY AVAILABLE DATA PROVIDED IN THIS REPOSITORY)
   
 "Data.zip" folder: Once unzipped, will contain
   1. "./Data/Spatial_data/"
