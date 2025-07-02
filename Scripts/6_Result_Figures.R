@@ -7,6 +7,10 @@
   #'  -------------------------
   #'  Script to generate maps used in publication.
   #'  
+  #'  THIS SCRIPT IS PROVIDED FOR TRANSPARENCY BUT ONLY THE STUDY AREA MAP CAN BE
+  #'  REPRODUCED WITH PUBLICLY AVAILABLE DATA. CAMERA LOCATIONS ARE SENSITIVE BUT 
+  #'  AVAILABLE UPON REQUEST FROM IDAHO DEPT OF FISH & GAME FOR QUALIFIED RESEARCHERS.
+  #'  
   #'  Requires:
   #'    1. Spatial data from camera clusters generated with 2_Cluster_cameras.R
   #'    2. Spatial data for Royle-Nichols relative abundance indices generated with
@@ -24,33 +28,15 @@
   library(patchwork)
   library(tidyverse)
   
-  #'  Load spatial data
+  #'  Load spatial data that is publicly available or generated with previous scripts
   #'  Cluster polygons
   gmu1_poly <- st_read("./Outputs/Spatial_outputs/cluster_polygons_gmu1.shp") %>% mutate(GMU = "GMU1")
   gmu6_poly <- st_read("./Outputs/Spatial_outputs/cluster_polygons_gmu6.shp") %>% mutate(GMU = "GMU6")
   gmu10a_poly <- st_read("./Outputs/Spatial_outputs/cluster_polygons_gmu10a.shp") %>% mutate(GMU = "GMU10A")
   
-  #'  Camera clusters
-  clusters_gmu1 <- st_read("./Outputs/Spatial_outputs/cam_clusters_gmu1.shp") 
-  clusters_gmu6 <- st_read("./Outputs/Spatial_outputs/cam_clusters_gmu6.shp") 
-  clusters_gmu10a <- st_read("./Outputs/Spatial_outputs/cam_clusters_gmu10a.shp") 
-  cameras_per_cluster <- bind_rows(clusters_gmu1, clusters_gmu6, clusters_gmu10a) %>%
-    group_by(CamID) %>%
-    slice(1L) %>%
-    ungroup()
-  
-  #'  Royle-Nichols estimates spatial data
-  load("./Outputs/Spatial_outputs/spatial_RN_list.RData")
-  
   #'  Relative Density Index per cluster (loads as cluster_density)
   load("./Outputs/RelativeDensityIndex_per_SppCluster.RData")
   head(cluster_density[[1]]); head(cluster_density[[2]]); head(cluster_density[[3]])
-  
-  #'  Camera locations
-  cams_20s_wgs84 <- st_read("./Data/Spatial_data/cams_2020_wgs84_offset.shp")
-  cams_21s_wgs84 <- st_read("./Data/Spatial_data/cams_2021_wgs84_offset.shp")
-  cams_22s_wgs84 <- st_read("./Data/Spatial_data/cams_2022_wgs84_offset.shp")
-  cam_list <- list(cams_20s_wgs84, cams_21s_wgs84, cams_22s_wgs84)
   
   #'  Idaho GMUs and water
   usa_wgs84 <- st_read("./Data/Spatial_data/US_states.shp") %>%
@@ -73,43 +59,6 @@
   clearwater <- st_read("./Data/Spatial_data/NorthForkClearwater_flowline.shp")
   rivers <- bind_rows(priestrivers, pendoreille, kootenairiver, clarkfork, clearwater) 
   rivers_clip <- st_intersection(rivers, gmu_wgs84)
-  
-  #'  -----------------------
-  ####  Format spatial data  ####
-  #'  -----------------------
-  #'  Define study years
-  year_list <- list("2020", "2021", "2022")
-  
-  #'  Add year to each RN abundance dataframe and unlist per species
-  add_yr <- function(dat, yr) {
-    dat$Year <- yr
-    return(dat)
-  }
-  rn_bear_all <- mapply(add_yr, dat = spatial_RN_list[[1]], yr = year_list, SIMPLIFY = FALSE) %>% bind_rows(.)
-  rn_coy_all <- mapply(add_yr, dat = spatial_RN_list[[3]], yr = year_list, SIMPLIFY = FALSE) %>% bind_rows(.)
-  rn_lion_all <- mapply(add_yr, dat = spatial_RN_list[[4]], yr = year_list, SIMPLIFY = FALSE) %>% bind_rows(.)
-  rn_wolf_all <- mapply(add_yr, dat = spatial_RN_list[[5]], yr = year_list, SIMPLIFY = FALSE) %>% bind_rows(.)
-  rn_elk_all <- mapply(add_yr, dat = spatial_RN_list[[6]], yr = year_list, SIMPLIFY = FALSE) %>% bind_rows(.)
-  rn_moose_all <- mapply(add_yr, dat = spatial_RN_list[[8]], yr = year_list, SIMPLIFY = FALSE) %>% bind_rows(.)
-  rn_wtd_all <- mapply(add_yr, dat = spatial_RN_list[[9]], yr = year_list, SIMPLIFY = FALSE) %>% bind_rows(.)
-  
-  #'  Merge cluster polygons across GMUs
-  cluster_poly <- bind_rows(gmu1_poly, gmu6_poly, gmu10a_poly) %>%
-    rename(ClusterID = Clusters)
-  
-  #'  Merge spatial camera cluster data together and reduce to one observation per camera
-  clusters_all <- bind_rows(clusters_gmu1, clusters_gmu6, clusters_gmu10a) %>%
-    dplyr::select(c(CamID, CellID, GMU, Setup, Clustrs, are_km2, geometry)) %>%
-    rename(ClusterID = Clustrs) %>%
-    rename(area_km2 = are_km2) %>%
-    group_by(CamID) %>%
-    slice(1L) %>%
-    ungroup()
-    
-  #'  Merge RDI into single document
-  rdi <- bind_rows(cluster_density) %>%
-    filter(!is.na(ClusterID))
-    
   
   #'  ------------------
   ####  Study area map  ####
@@ -168,12 +117,76 @@
       height = 0.55) +
     labs(subtitle = "a") + 
     theme(plot.subtitle = element_text(hjust = 0))
-
+  
   plot(StudyArea_Map) 
   #'  NOTE: placement of inset and margins will vary with plot window. Values 
   #'  for xy,wh are based on exported figures for publication
   
-
+  
+  #'  --------------------------------------------
+  ####  Map Relative Abundance & Density Indices  ####
+  #'  --------------------------------------------
+  #'  THE FOLLOWING CODE IS PROVIDED FOR TRANSPARENCY BUT CANNOT BE RUN WITH 
+  #'  PUBLICLY AVAILABLE DATA. CAMERA LOCATIONS ARE SENSITIVE BUT AVAILABLE
+  #'  UPON REQUEST FROM IDAHO DEPARTMENT OF FISH & GAME FOR QUALIFIED RESEARCHERS.
+  #'  Camera clusters
+  
+  #'  Load camera cluster data and spatial data for RAI
+  clusters_gmu1 <- st_read("./Outputs/Spatial_outputs/cam_clusters_gmu1.shp") 
+  clusters_gmu6 <- st_read("./Outputs/Spatial_outputs/cam_clusters_gmu6.shp") 
+  clusters_gmu10a <- st_read("./Outputs/Spatial_outputs/cam_clusters_gmu10a.shp") 
+  cameras_per_cluster <- bind_rows(clusters_gmu1, clusters_gmu6, clusters_gmu10a) %>%
+    group_by(CamID) %>%
+    slice(1L) %>%
+    ungroup()
+  
+  #'  Royle-Nichols estimates spatial data
+  load("./Outputs/Spatial_outputs/spatial_RN_list.RData")
+  
+    #'  Camera locations
+  cams_20s_wgs84 <- st_read("./Data/Spatial_data/cams_2020_wgs84.shp")
+  cams_21s_wgs84 <- st_read("./Data/Spatial_data/cams_2021_wgs84.shp")
+  cams_22s_wgs84 <- st_read("./Data/Spatial_data/cams_2022_wgs84.shp")
+  cam_list <- list(cams_20s_wgs84, cams_21s_wgs84, cams_22s_wgs84)
+  
+  
+  #'  -----------------------
+  ####  Format spatial data  ####
+  #'  -----------------------
+  #'  Define study years
+  year_list <- list("2020", "2021", "2022")
+  
+  #'  Add year to each RN abundance dataframe and unlist per species
+  add_yr <- function(dat, yr) {
+    dat$Year <- yr
+    return(dat)
+  }
+  rn_bear_all <- mapply(add_yr, dat = spatial_RN_list[[1]], yr = year_list, SIMPLIFY = FALSE) %>% bind_rows(.)
+  rn_coy_all <- mapply(add_yr, dat = spatial_RN_list[[3]], yr = year_list, SIMPLIFY = FALSE) %>% bind_rows(.)
+  rn_lion_all <- mapply(add_yr, dat = spatial_RN_list[[4]], yr = year_list, SIMPLIFY = FALSE) %>% bind_rows(.)
+  rn_wolf_all <- mapply(add_yr, dat = spatial_RN_list[[5]], yr = year_list, SIMPLIFY = FALSE) %>% bind_rows(.)
+  rn_elk_all <- mapply(add_yr, dat = spatial_RN_list[[6]], yr = year_list, SIMPLIFY = FALSE) %>% bind_rows(.)
+  rn_moose_all <- mapply(add_yr, dat = spatial_RN_list[[8]], yr = year_list, SIMPLIFY = FALSE) %>% bind_rows(.)
+  rn_wtd_all <- mapply(add_yr, dat = spatial_RN_list[[9]], yr = year_list, SIMPLIFY = FALSE) %>% bind_rows(.)
+  
+  #'  Merge cluster polygons across GMUs
+  cluster_poly <- bind_rows(gmu1_poly, gmu6_poly, gmu10a_poly) %>%
+    rename(ClusterID = Clusters)
+  
+  #'  Merge spatial camera cluster data together and reduce to one observation per camera
+  clusters_all <- bind_rows(clusters_gmu1, clusters_gmu6, clusters_gmu10a) %>%
+    dplyr::select(c(CamID, CellID, GMU, Setup, Clustrs, are_km2, geometry)) %>%
+    rename(ClusterID = Clustrs) %>%
+    rename(area_km2 = are_km2) %>%
+    group_by(CamID) %>%
+    slice(1L) %>%
+    ungroup()
+    
+  #'  Merge RDI into single document
+  rdi <- bind_rows(cluster_density) %>%
+    filter(!is.na(ClusterID))
+    
+  
   #'  ------------------------------------------
   ####  Plot Royle-Nichols abundance estimates  ####
   #'  ------------------------------------------
